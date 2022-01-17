@@ -27,6 +27,9 @@ Take-home assignment for Carta interview. Build executable CLI tool for ingestin
 - [ ] `TOTAL BY DATE` in output is truncated/filled to specified `PRECISION`
 
 ## Assumptions and Limitations:
+- I am assuming that the person assessing this project either have a build environment with the necessary dependencies, or will easily be able to work through any build errors
+  - I also assume that the build will occur in an isolated environment that won't break/override/collide with dependencies required for other work
+  - I was tempted to ship a Dockerfile with this project in an attempt to isolate/control dependencies in a container, but this seemed out of scope, and also still makes the assumption that Docker is installed
 - As a CLI tool with no persistence requirements (and 2hour expected effort), it did not seem appropriate to implement a persistence layer
   - However, any codebase handling large volumes of critical data like this would benefit from a robust/shardable DB layer. I intend to structure the code in such a way that a DB could be added later without starting over
 
