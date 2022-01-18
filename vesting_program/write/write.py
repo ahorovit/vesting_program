@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from contract import Contract
+from vesting_program.write.contract import DateField
 
 class Writer(ABC):
     """Base class for writer classes
@@ -26,12 +27,13 @@ class TempWriter(Writer):
 
 
 class Aggregator():
-    def __init__(self, contract: Contract, filterDate: ):
+    def __init__(self, contract: Contract, filterDate: str):
         self.result = {}
         self.contract = contract
+        self.filterDate = filterDate
 
     def push(self, record: dict):
-        key = self.contract.getUniqueKey()
+        key = self.contract.getUniqueKey(dict)
 
         if key not in self.result:
             self.contract[key] = 0 #TODO: truncate/fill
