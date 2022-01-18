@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import list
+import datetime
 
 class Field(ABC):
     """Contract Element for validating and transforming input value"""
@@ -19,6 +19,7 @@ class Field(ABC):
         """Includes a field instance in the Unique Key for a record"""
         self.isUnique = True
 
+
 class EnumField(Field):
     """Field for processing Enum data values"""
 
@@ -28,9 +29,16 @@ class EnumField(Field):
 
 class DateField(Field):
     """Field for processing Date data values"""
+
+    def __init__(self, recordIdx: str):
+        super().__init__(recordIdx)
+        self.format = '%Y-%m-%d'
     
     def validate(self, value):
-        pass
+        try:
+            datetime.datetime.strptime(value, self.format)
+        except ValueError:
+            raise ValidationError(f'Incorrect data format, should be {self.format}')
 
 
 class NumericField(Field):
@@ -46,3 +54,7 @@ class Contract():
     """
     def __init__(self, fields: list[Field]):
         self.fields = fields
+
+
+class ValidationError(ValueError):
+    pass

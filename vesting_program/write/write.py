@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from contract import Contract
 
 class Writer(ABC):
     """Base class for writer classes
@@ -24,4 +25,16 @@ class TempWriter(Writer):
         pass
 
 
-class 
+class Aggregator():
+    def __init__(self, contract: Contract, filterDate: ):
+        self.result = {}
+        self.contract = contract
+
+    def push(self, record: dict):
+        key = self.contract.getUniqueKey()
+
+        if key not in self.result:
+            self.contract[key] = 0 #TODO: truncate/fill
+        
+
+        

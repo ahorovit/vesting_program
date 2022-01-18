@@ -46,6 +46,7 @@ Though I am certain I will fall short on idiomatic code style and project struct
 - [ ] Implement Class Inheritance/Interfaces anticipating future extension
   - [ ] Interfaces should anticipate Persistence layer in the future
 - [ ] Compose classes with Dependency Injection
+  - [ ] Find/use Annotation-based DI framework for Python
 - [x] Test Coverage using Python stdlib unittest
 - [x] Minimize memory overhead when processing large files via use of Generators
 - [ ] Validation of input values -- Cancel execution if invalid values found
@@ -56,3 +57,4 @@ Though I am certain I will fall short on idiomatic code style and project struct
 - [ ] Use libraries as appropriate
 - [ ] PEP 257 Docstrings for modules/classes/methods
 - [ ] PEP 484 Type Hints
+- [ ] Lint with MyPy or Flask8
