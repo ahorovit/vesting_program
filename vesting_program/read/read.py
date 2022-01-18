@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import csv
+from typing import Generator
 
 class Reader(ABC):
     """Base class for reader classes
@@ -8,17 +9,22 @@ class Reader(ABC):
     """
 
     @abstractmethod
-    def getNextRecord(self):
+    def getNextRecord(self) -> Generator[dict, None, None]:
         pass
 
 
 class CsvReader(Reader):
-    def __init__(self, csvPath: str):
-        self.csvPath = csvPath
+    """Reads data input from csv file"""
 
-    def getNextRecord(self):
+    def __init__(self, csvPath: str, header: list):
+        self.csvPath = csvPath
+        self.header = header
+
+    def getNextRecord(self) -> Generator[dict, None, None]:
+        """yields csv rows as list"""
+
         with open(self.csvPath, "r") as handle:
             csvReader = csv.reader(handle)
             for csvRow in csvReader:
-                yield csvRow
+                yield {key:csvRow[idx] for idx, key in enumerate(self.header)}
 
