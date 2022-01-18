@@ -13,8 +13,13 @@ class TestCsvReader(unittest.TestCase):
 
     def test_simple_read(self):
         """Tests CsvReader's Generator capability"""
-        for row in self.reader.getNextRecord():
-            print(row)
+
+        rowCount = 0
+        for csvRow in self.reader.getNextRecord():
+            rowCount += 1
+            self.assertIsInstance(csvRow, list, 'expected list type')
+            self.assertEqual(len(csvRow), 6, 'expected 6 elements')
+        self.assertEqual(rowCount, 2, 'expected 2 rows')
 
 
 
