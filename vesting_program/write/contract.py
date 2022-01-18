@@ -32,7 +32,7 @@ class TextField(Field):
     """Field for processing Text/str data values"""
     def validate(self, value):
         if not isinstance(value, str):
-            raise ValidationError("str value expected")
+            raise ValidationError(f'Invalid {self.recordIdx} value: str value expected')
 
 
 class EnumField(TextField):
@@ -57,9 +57,26 @@ class DateField(Field):
 
 
 class NumericField(Field):
+    """Field for processing Numeric data values"""
 
-    def validate(self, value):
-        pass
+    def __init__(self, recordIdx: str):
+        super().__init__(recordIdx)
+        self.precision = 0
+
+    def validate(self, value: str):
+        # TODO: accept actual numeric values
+        if not value.isnumeric():
+            raise ValidationError(f'Value is not numeric: {value}')
+
+    def postProcess(self, value):
+        if self.precision == 0:
+            return int(value)
+        else:
+            #TODO implement precision
+            raise TransformationError("non-zero precision not yet supported")
+
+    
+
 
 
 class Contract():
@@ -67,19 +84,25 @@ class Contract():
     
     TODO: Complete implementation. For TempWriter, build logic into Aggregator instead
     """
-    def __init__(self, fields: list[Field]):
+    def __init__(self, fields: dict[str, Field]):
         self.fields = fields
-        self.uniqueKeyFields = list(filter(lambda x: x.isUnique, self.fields))
+        self.uniqueKeyFields = list(filter(lambda x: x.isUnique, self.fields.values()))
 
     def getUniqueKey(self, record:dict):
         """Extract tuple of unique-key values from record"""
-        res = tuple(field.getValue(record) for field in self.uniqueKeyFields)
+        return tuple(field.getValue(record) for field in self.uniqueKeyFields)
 
-        return res
-
+    def getContractField(self, key:str) -> Field:
+        """Retrieve a single Field object by key"""
+        if key not in self.fields:
+            raise ContractError(f'Field with key {key} not found')
+        return self.fields[key]
 
 class ValidationError(ValueError):
     pass
 
 class TransformationError(ValueError):
+    pass
+
+class ContractError(Exception):
     pass

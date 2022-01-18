@@ -10,8 +10,9 @@ Take-home assignment for Carta interview. Build executable CLI tool for ingestin
 - [ ] Input csv lacking headers is read as the columns:
   - `VEST,<<EMPLOYEE ID>>,<<EMPLOYEE NAME>>,<<AWARD ID>>,<<DATE>>,<<QUANTITY>>`
 - [ ] Output to stdout
-  - [ ] Columns: `<<EMPLOYEE ID>>,<<EMPLOYEE NAME>>,<<AWARD ID>>,<<TOTAL BY DATE>>`
-  - [ ] output ordered by employee ID, award ID
+  - [x] Columns: `<<EMPLOYEE ID>>,<<EMPLOYEE NAME>>,<<AWARD ID>>,<<TOTAL BY DATE>>`
+  - [x] output ordered by employee ID, award ID
+  - [x] All employees in input are listed regardless of filterDate
 
 ### Stage Two
 - [ ] `VEST` Column may include value "VEST" or "CANCEL"

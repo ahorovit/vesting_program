@@ -24,12 +24,26 @@ class TestTextField(unittest.TestCase):
         with self.assertRaises(contract.ValidationError):
             self.field.getValue({self.IDX: 123})
 
+class TestNumericField(unittest.TestCase):
+    IDX = 'numIdx'
+
+    def setUp(self):
+        self.field = contract.NumericField(self.IDX)
+
+    def test_invalid_numeric(self):
+        with self.assertRaises(contract.ValidationError):
+            self.field.getValue({self.IDX: 'baz'})
+
+
 class TestContract(unittest.TestCase):
     UNIQUE_DATE = '2021-01-01'
     RECORD = {'fooDate':UNIQUE_DATE, 'bar':'baz'}
 
     def setUp(self):
-        fields = [contract.DateField('fooDate').setUnique(), contract.TextField('bar')]
+        fields = {
+            'fooDate':contract.DateField('fooDate').setUnique(), 
+            'bar':contract.TextField('bar')
+        }
         self.contract = contract.Contract(fields)
 
     def test_unique_key(self):
