@@ -45,12 +45,13 @@ Though I am certain I will fall short on idiomatic code style and project struct
 - [ ] Separate concerns into testable units
 - [ ] Implement Class Inheritance/Interfaces anticipating future extension
   - [ ] Interfaces should anticipate Persistence layer in the future
-- [ ] Test Coverage using Python stdlib unittest
-- [ ] Minimize memory overhead when processing large files via use of Generators
+- [ ] Compose classes with Dependency Injection
+- [x] Test Coverage using Python stdlib unittest
+- [x] Minimize memory overhead when processing large files via use of Generators
 - [ ] Validation of input values -- Cancel execution if invalid values found
-- [ ] Makefile 
+- [x] Makefile 
   - [ ] command for building executable
-  - [ ] command for running tests
+  - [x] command for running tests
 - [ ] Use libraries as appropriate
 - [ ] PEP 257 Docstrings for modules/classes/methods
 - [ ] PEP 484 Type Hints
