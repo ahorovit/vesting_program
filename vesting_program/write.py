@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from .contract import Contract
-from vesting_program.write.contract import DateField
+from vesting_program.contract import DateField
 
 class Writer(ABC):
     """Base class for writer classes

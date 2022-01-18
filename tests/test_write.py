@@ -1,6 +1,10 @@
 import unittest
-from vesting_program.write.write import VestingAggregator
-import vesting_program.write.contract as contract
+# import vesting_program.write.contract as contract
+
+from .context import vesting_program
+from vesting_program.write import VestingAggregator
+import vesting_program.contract as contract
+ 
 
 class TestAggregator(unittest.TestCase):
     """Test class for Aggregator"""

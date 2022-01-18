@@ -35,18 +35,18 @@ Take-home assignment for Carta interview. Build executable CLI tool for ingestin
   - However, any codebase handling large volumes of critical data like this would benefit from a robust/shardable DB layer. I intend to structure the code in such a way that a DB could be added later without starting over
 
 ## Caveats, Excuses, and Rationalizations:
-I (the anonymous author) am not a Python developer. I use Python in the context of LeetCode-style interview problems because it's expressive and easy to implement solutions quickly. But this is basically my first attempt at a "Project" using Python, and I had a lot to learn before I could attempt any of the Technical Checkpoints below. It was probably a mistake to use Python for this exercise, but I took the chance for the following reasons:
+I (the anonymous author) am not a Python developer. I use Python in the context of LeetCode-style interview problems because it's expressive and easy to implement solutions quickly. But this is my first attempt at a fleshed-out "Project" using Python, and I had a lot to learn before I could attempt any of the Technical Checkpoints below. This may have been unwise, but I took the chance for the following reasons:
 
 1. The backend team at Carta uses Python, and I want to demonstrate some ability with the relevant stack
 1. I wanted to master Python on a deeper level for my own benefit, and this was a good motivator
 
-Though I am certain I will fall short on idiomatic code style and project structure, my hope is that this will clearly demonstrate my ability to find relevant resources, self-teach and incorporate best practices quickly.
+Though I am certain I will fall short on idiomatic code style and project structure, my hope is that this will clearly demonstrate my ability to find relevant resources, self-teach and incorporate best practices quickly. Either way, I've found it to be an enjoyable learning experience.
 
 ## Technical Checkpoints:
 - [ ] Separate concerns into testable units
 - [ ] Implement Class Inheritance/Interfaces anticipating future extension
   - [ ] Interfaces should anticipate Persistence layer in the future
-- [ ] Compose classes with Dependency Injection
+- [x] Compose classes with Dependency Injection
   - [ ] Find/use Annotation-based DI framework for Python
 - [x] Test Coverage using Python stdlib unittest
 - [x] Minimize memory overhead when processing large files via use of Generators

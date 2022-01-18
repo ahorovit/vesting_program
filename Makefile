@@ -34,15 +34,12 @@ ifeq ($(OS), Windows_NT)
 	PY=python
 endif
 
-all: test
-
 $(VENV): requirements.txt
 	$(PY) -m venv $(VENV)
 	$(BIN)/pip install -r requirements.txt
 
-.PHONY: test
 test: $(VENV)
-	export PYTHONPATH=.
+# export PYTHONPATH=.
 	$(BIN)/python -m unittest discover
 
 # .PHONY: lint
@@ -53,10 +50,11 @@ test: $(VENV)
 # release: $(VENV)
 #     $(BIN)/python setup.py sdist bdist_wheel upload
 
-.PHONY: clean
+
 clean:
 	rm -rf $(VENV)
 	find . -type f -name *.pyc -delete
 	find . -type d -name __pycache__ -delete
 	rm -rf tests/.pytest_cache
 
+.PHONY: clean test 

@@ -1,6 +1,7 @@
 
 import unittest
-import vesting_program.write.contract as contract
+from .context import vesting_program
+import vesting_program.contract as contract
 
 
 class TestDateField(unittest.TestCase):
