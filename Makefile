@@ -56,4 +56,7 @@ test: $(VENV)
 .PHONY: clean
 clean:
 	rm -rf $(VENV)
+	find . -type f -name *.pyc -delete
 	find . -type d -name __pycache__ -delete
+	rm -rf tests/.pytest_cache
+

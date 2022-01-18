@@ -1,6 +1,5 @@
 import unittest
 import os
-
 from vesting_program.read.read import CsvReader
 
 class TestCsvReader(unittest.TestCase):
@@ -17,7 +16,6 @@ class TestCsvReader(unittest.TestCase):
             rowCount += 1
             expectedRow = {'event':'VEST', 'id':'E001', 'name':'Alice'}
             self.assertEqual(csvRow, expectedRow, 'csvRow does not match')
-            self.assertEqual
         self.assertEqual(rowCount, 2, 'expected 2 rows')
 
 

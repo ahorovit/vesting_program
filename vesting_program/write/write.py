@@ -14,8 +14,14 @@ class TempWriter(Writer):
     """Non-persistent implementation of Writer
 
     Validates/filters/Aggregates input values based on a Contract. Does not
-    persist results to DB
+    persist results to DB, but rather to an Aggregator object
     """
 
+    def __init__(self):
+        pass
+
     def pushRecord(self, record: dict):
-        
+        pass
+
+
+class 
