@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from .contract import Contract
-from vesting_program.contract import DateField
+from .contract import Contract, DateField, TextField, NumericField
 
 class Writer(ABC):
     """Base class for writer classes
@@ -29,12 +28,24 @@ class TempWriter(Writer):
 class VestingAggregator():
     """In lieu of DB layer, aggregates vesting events from input file"""
 
+    EVENT_KEY = 'VEST'
     DATE_KEY = 'DATE'
     EMPLOYEE_ID_KEY = 'EMPLOYEE ID'
     EMPLOYEE_NAME_KEY = 'EMPLOYEE NAME'
     AWARD_ID_KEY = 'AWARD ID'
     QUANTITY_KEY = 'QUANTITY'
 
+    @classmethod
+    def factory(cls, filterDate):
+        contract_ = Contract({
+            cls.EMPLOYEE_ID_KEY:TextField(cls.EMPLOYEE_ID_KEY).setUnique(), 
+            cls.AWARD_ID_KEY:TextField(cls.AWARD_ID_KEY).setUnique(), 
+            cls.EMPLOYEE_NAME_KEY:TextField(cls.EMPLOYEE_NAME_KEY),
+            cls.DATE_KEY:DateField(cls.DATE_KEY),
+            cls.QUANTITY_KEY:NumericField(cls.QUANTITY_KEY)
+        })
+
+        return VestingAggregator(contract_, filterDate)
 
     def __init__(self, contract: Contract, filterDate: str):
         self.result = {}
@@ -59,7 +70,8 @@ class VestingAggregator():
 
     def isOnOrBeforeFilterDate(self, record: dict) -> bool:
         dateField = self.contract.getContractField(self.DATE_KEY)
-        return dateField.getValue(record) <= self.filterDate
+        dateValue = dateField.getValue(record)
+        return dateValue <= self.filterDate
 
     def incrementTotal(self, key: tuple, record: dict):
         quantityField = self.contract.getContractField(self.QUANTITY_KEY)

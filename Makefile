@@ -39,7 +39,6 @@ $(VENV): requirements.txt
 	$(BIN)/pip install -r requirements.txt
 
 test: $(VENV)
-# export PYTHONPATH=.
 	$(BIN)/python -m unittest discover
 
 # .PHONY: lint

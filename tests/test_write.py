@@ -1,11 +1,9 @@
 import unittest
-# import vesting_program.write.contract as contract
-
 from .context import vesting_program
-from vesting_program.write import VestingAggregator
-import vesting_program.contract as contract
- 
+from vesting_program.write.write import VestingAggregator
+from vesting_program.write.contract import TextField, DateField, NumericField, Contract
 
+ 
 class TestAggregator(unittest.TestCase):
     """Test class for Aggregator"""
 
@@ -60,17 +58,17 @@ class TestAggregator(unittest.TestCase):
         VestingAggregator.QUANTITY_KEY:'600'
     }
 
-    CONTRACT_FIELDS = {
-        VestingAggregator.EMPLOYEE_ID_KEY:contract.TextField(VestingAggregator.EMPLOYEE_ID_KEY).setUnique(), 
-        VestingAggregator.AWARD_ID_KEY:contract.TextField(VestingAggregator.AWARD_ID_KEY).setUnique(), 
-        VestingAggregator.EMPLOYEE_NAME_KEY:contract.TextField(VestingAggregator.EMPLOYEE_NAME_KEY),
-        VestingAggregator.DATE_KEY:contract.DateField(VestingAggregator.DATE_KEY),
-        VestingAggregator.QUANTITY_KEY:contract.NumericField(VestingAggregator.QUANTITY_KEY)
-    }
+    # CONTRACT_FIELDS = {
+    #     VestingAggregator.EMPLOYEE_ID_KEY:TextField(VestingAggregator.EMPLOYEE_ID_KEY).setUnique(), 
+    #     VestingAggregator.AWARD_ID_KEY:TextField(VestingAggregator.AWARD_ID_KEY).setUnique(), 
+    #     VestingAggregator.EMPLOYEE_NAME_KEY:TextField(VestingAggregator.EMPLOYEE_NAME_KEY),
+    #     VestingAggregator.DATE_KEY:DateField(VestingAggregator.DATE_KEY),
+    #     VestingAggregator.QUANTITY_KEY:NumericField(VestingAggregator.QUANTITY_KEY)
+    # }
 
     def setUp(self):
-        self.contract = contract.Contract(self.CONTRACT_FIELDS)
-        self.aggregator = VestingAggregator(self.contract, self.FILTER_DATE)
+        # self.contract = Contract(self.CONTRACT_FIELDS)
+        self.aggregator = VestingAggregator.factory(self.FILTER_DATE)
 
     def test_aggregator_push(self):
         expected = []

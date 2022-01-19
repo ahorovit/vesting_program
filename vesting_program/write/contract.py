@@ -80,10 +80,7 @@ class NumericField(Field):
 
 
 class Contract():
-    """WIP: Generic mapping/validation approach for translating raw data to ORM
-    
-    TODO: Complete implementation. For TempWriter, build logic into Aggregator instead
-    """
+    """WIP: Generic mapping/validation approach for translating raw data to ORM"""
     def __init__(self, fields: dict[str, Field]):
         self.fields = fields
         self.uniqueKeyFields = list(filter(lambda x: x.isUnique, self.fields.values()))

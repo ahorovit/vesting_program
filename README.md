@@ -5,11 +5,11 @@ Take-home assignment for Carta interview. Build executable CLI tool for ingestin
 ## Core Requirements:
 
 ### Stage One
-- [ ] Executable takes positional args: filepath, filterDate:
+- [x] Executable takes positional args: filepath, filterDate:
   - EX `./vesting_program example.csv 2020-03-03`
-- [ ] Input csv lacking headers is read as the columns:
+- [x] Input csv lacking headers is read as the columns:
   - `VEST,<<EMPLOYEE ID>>,<<EMPLOYEE NAME>>,<<AWARD ID>>,<<DATE>>,<<QUANTITY>>`
-- [ ] Output to stdout
+- [x] Output to stdout
   - [x] Columns: `<<EMPLOYEE ID>>,<<EMPLOYEE NAME>>,<<AWARD ID>>,<<TOTAL BY DATE>>`
   - [x] output ordered by employee ID, award ID
   - [x] All employees in input are listed regardless of filterDate
@@ -43,7 +43,7 @@ I (the anonymous author) am not a Python developer. I use Python in the context 
 Though I am certain I will fall short on idiomatic code style and project structure, my hope is that this will clearly demonstrate my ability to find relevant resources, self-teach and incorporate best practices quickly. Either way, I've found it to be an enjoyable learning experience.
 
 ## Technical Checkpoints:
-- [ ] Separate concerns into testable units
+- [x] Separate concerns into testable units
 - [ ] Implement Class Inheritance/Interfaces anticipating future extension
   - [ ] Interfaces should anticipate Persistence layer in the future
 - [x] Compose classes with Dependency Injection
@@ -54,7 +54,7 @@ Though I am certain I will fall short on idiomatic code style and project struct
 - [x] Makefile
   - [ ] command for building executable
   - [x] command for running tests
-  - [ ] command for cleaning up venv and temp pycache/pytest files
+  - [x] command for cleaning up venv and temp pycache/pytest files
 - [ ] Use libraries as appropriate
 - [ ] PEP 257 Docstrings for modules/classes/methods
 - [ ] PEP 484 Type Hints

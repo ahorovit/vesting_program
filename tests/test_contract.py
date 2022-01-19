@@ -1,17 +1,16 @@
 
 import unittest
 from .context import vesting_program
-import vesting_program.contract as contract
-
+from vesting_program.write.contract import Contract, DateField, TextField, NumericField, ValidationError
 
 class TestDateField(unittest.TestCase):
     IDX = 'dateIdx'
 
     def setUp(self):
-        self.field = contract.DateField(self.IDX)
+        self.field = DateField(self.IDX)
 
     def test_invalid_date(self):
-        with self.assertRaises(contract.ValidationError):
+        with self.assertRaises(ValidationError):
             self.field.getValue({self.IDX: 'invalid'})
 
 
@@ -19,20 +18,21 @@ class TestTextField(unittest.TestCase):
     IDX = 'textIdx'
 
     def setUp(self):
-        self.field = contract.TextField(self.IDX)
+        self.field = TextField(self.IDX)
     
     def test_invalid_text(self):
-        with self.assertRaises(contract.ValidationError):
+        with self.assertRaises(ValidationError):
             self.field.getValue({self.IDX: 123})
+
 
 class TestNumericField(unittest.TestCase):
     IDX = 'numIdx'
 
     def setUp(self):
-        self.field = contract.NumericField(self.IDX)
+        self.field = NumericField(self.IDX)
 
     def test_invalid_numeric(self):
-        with self.assertRaises(contract.ValidationError):
+        with self.assertRaises(ValidationError):
             self.field.getValue({self.IDX: 'baz'})
 
 
@@ -42,13 +42,16 @@ class TestContract(unittest.TestCase):
 
     def setUp(self):
         fields = {
-            'fooDate':contract.DateField('fooDate').setUnique(), 
-            'bar':contract.TextField('bar')
+            'fooDate':DateField('fooDate').setUnique(), 
+            'bar':TextField('bar')
         }
-        self.contract = contract.Contract(fields)
+        self.contract = Contract(fields)
 
     def test_unique_key(self):
         self.assertEqual((self.UNIQUE_DATE,), self.contract.getUniqueKey(self.RECORD))
+
+    def test_get_field(self):
+        self.assertIsInstance(self.contract.getContractField('fooDate'), DateField)
 
 
 if __name__ == '__main__':

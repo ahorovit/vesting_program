@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-import csv
 from typing import Generator
+import csv
 
 class Reader(ABC):
     """Base class for reader classes
