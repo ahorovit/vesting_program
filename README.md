@@ -23,12 +23,12 @@ Take-home assignment for Carta interview. Build executable CLI tool for ingestin
 
 ### Stage Three
 
-- [ ] Executable takes a third optional positional arg `PRECISION`
-  - [ ] Defaults to 0 (integers)
+- [x] Executable takes a third optional positional arg `PRECISION`
+  - [x] Defaults to 0 (integers)
   - [ ] Must in range 0-6
-- [ ] `QUANTITY` value can specify fractional shares
-  - [ ] Values are truncated/filled to specified `PRECISION`
-- [ ] `TOTAL BY DATE` in output is truncated/filled to specified `PRECISION`
+- [x] `QUANTITY` value can specify fractional shares
+  - [x] Values are truncated/filled to specified `PRECISION`
+- [x] `TOTAL BY DATE` in output is truncated/filled to specified `PRECISION`
 
 ## Assumptions and Limitations
 
