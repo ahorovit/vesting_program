@@ -1,38 +1,6 @@
-# .PHONY: prepare_venv setup build test
-
-# VENV_NAME?=venv
-# PYTHON=${VENV_NAME}/bin/python
-
-# prepare_venv: $(VENV_NAME)/bin/activate
-
-
-# $(VENV_NAME): requirements.txt
-# 	python3 -m venv $(VENV_NAME)
-# 	./$(VENV_NAME)/bin/pip install -r requirements.txt
-
-# setup: $(VENV_NAME)/bin/activate
-# 	export PYTHONPATH=.
-# 	. ./venv/bin/activate
-
-# # run tests
-# test: setup
-# 	python -m pytest tests
-
-# clean:
-# 	rm -rf __pycache__
-# 	rm -rf venv
-
-
-# system python interpreter. used only to create virtual environment
 PY = python3
 VENV = venv
 BIN=$(VENV)/bin
-
-# make it work on windows too
-ifeq ($(OS), Windows_NT)
-	BIN=$(VENV)/Scripts
-	PY=python
-endif
 
 $(VENV): requirements.txt
 	$(PY) -m venv $(VENV)
@@ -41,14 +9,14 @@ $(VENV): requirements.txt
 test: $(VENV)
 	$(BIN)/python -m unittest discover
 
-# .PHONY: lint
-# lint: $(VENV)
-#     $(BIN)/flake8
+stage1: $(VENV)
+	$(BIN)/python vesting_program/main.py data/example1.csv 2020-04-01
 
-# .PHONY: release
-# release: $(VENV)
-#     $(BIN)/python setup.py sdist bdist_wheel upload
+stage2: $(VENV)
+	$(BIN)/python vesting_program/main.py data/example2.csv 2021-01-01
 
+stage3: $(VENV)
+	$(BIN)/python vesting_program/main.py data/example3.csv 2021-01-01 1
 
 clean:
 	rm -rf $(VENV)
@@ -56,4 +24,4 @@ clean:
 	find . -type d -name __pycache__ -delete
 	rm -rf tests/.pytest_cache
 
-.PHONY: clean test 
+.PHONY: clean test stage1 stage2 stage3
