@@ -107,10 +107,27 @@ class TestAggregator(unittest.TestCase):
         expected[2] = 'E001,Alice Smith,ISO-002,400'
         self.assertEqual(expected, self.aggregator.getVestedTotals())
 
-    def test_vested_total_is_positive(self):
+    def test_vested_total_never_negative(self):
         """CANCEL event should not push total below 0"""
         with self.assertRaises(ValidationError):
             self.aggregator.push(self.RECORD_7)
+
+    def test_precision(self):
+        cases = [
+            [0, '1.02345', '1'],
+            [1, '1.02345', '1.0'],
+            [4, '1.02345', '1.0234'],
+            [2, '1', '1.00']
+        ]
+        for case in cases:
+            with self.subTest(case=case):
+                precision, quantity, expected = case
+                inputRecord = self.RECORD_1
+                inputRecord[VestingAggregator.QUANTITY_KEY] = quantity
+                aggregator = VestingAggregator.factory(self.FILTER_DATE, precision)
+                aggregator.push(inputRecord)
+                actual = aggregator.getVestedTotals()[0].split(',')[-1]
+                self.assertEqual(actual, expected)
 
 
 if __name__ == '__main__':

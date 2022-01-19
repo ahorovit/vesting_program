@@ -69,7 +69,7 @@ class NumericField(Field):
         self.precision = precision
 
     def validate(self, value: str):
-        # TODO: accept actual numeric values
+        # TODO: accept actual numeric values?
         try:
             int(value)
             return
@@ -78,7 +78,7 @@ class NumericField(Field):
         try:
             float(value)
         except ValueError:
-            raise ValidationError(f'Value is not valid numeric: {value}')
+            raise ValidationError(f'Value is not numeric: {value}')
 
     def postProcess(self, value):
         processed = f'{float(value):.{self.precision}f}'
