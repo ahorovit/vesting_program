@@ -21,7 +21,7 @@ class CsvReader(Reader):
         self.header = header
 
     def getNextRecord(self) -> Generator[dict, None, None]:
-        """yields csv rows as list"""
+        """yields csv rows as dict"""
 
         with open(self.csvPath, "r") as handle:
             csvReader = csv.reader(handle)

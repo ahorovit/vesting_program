@@ -41,7 +41,7 @@ class VestingAggregator():
     @classmethod # TODO: Use staticmethod?
     def factory(cls, filterDate):
         contract_ = Contract({
-            cls.EVENT_KEY:EnumField(cls.EVENT_KEY, [cls.VEST_VALUE,cls.CANCEL_VALUE]),
+            cls.EVENT_KEY:EnumField(cls.EVENT_KEY, (cls.VEST_VALUE,cls.CANCEL_VALUE)),
             cls.EMPLOYEE_ID_KEY:TextField(cls.EMPLOYEE_ID_KEY).setUnique(), 
             cls.AWARD_ID_KEY:TextField(cls.AWARD_ID_KEY).setUnique(), 
             cls.EMPLOYEE_NAME_KEY:TextField(cls.EMPLOYEE_NAME_KEY),
@@ -89,12 +89,8 @@ class VestingAggregator():
 
         self.result[key][self.QUANTITY_KEY] += sign*magnitude
 
-
-
-
     def getVestedTotals(self) -> list[str]:
         vestedTotals = []
-
         sortedKeys = sorted(self.result.keys(), key=lambda x: (x[0], x[1]))
         
         # Sort by employee ID, then by award ID
@@ -102,7 +98,5 @@ class VestingAggregator():
             resultRow = self.result[key]
             employeeId, awardId = key
             employeeName, quantity = resultRow[self.EMPLOYEE_NAME_KEY], resultRow[self.QUANTITY_KEY]
-            
             vestedTotals.append(f'{employeeId},{employeeName},{awardId},{quantity}')
-        
         return vestedTotals

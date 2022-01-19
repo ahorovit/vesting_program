@@ -1,7 +1,5 @@
 import unittest
 import os
-# from vesting_program.read.read import CsvReader
-from .context import vesting_program
 from vesting_program.read.read import CsvReader
 
 class TestCsvReader(unittest.TestCase):

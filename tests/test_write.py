@@ -1,5 +1,4 @@
 import unittest
-from .context import vesting_program
 from vesting_program.write.write import VestingAggregator
 from vesting_program.write.contract import TextField, DateField, NumericField, Contract, ValidationError
 

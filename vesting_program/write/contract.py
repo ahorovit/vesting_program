@@ -38,13 +38,13 @@ class TextField(Field):
 class EnumField(TextField):
     """Field for processing Enum data values"""
 
-    def __init__(self, recordIdx: str, validValues: list[str]):
+    def __init__(self, recordIdx: str, validValues: tuple[str]):
         super().__init__(recordIdx)
         self.validValues = validValues
 
     def validate(self, value):
         if value not in self.validValues:
-            raise ValidationError(f'Invalid input: {value}. Expecting {self.validValues}')
+            raise ValidationError(f'Invalid input: {value}. Expecting one of: {self.validValues}')
 
 
 class DateField(Field):
@@ -64,22 +64,25 @@ class DateField(Field):
 class NumericField(Field):
     """Field for processing Numeric data values"""
 
-    def __init__(self, recordIdx: str):
+    def __init__(self, recordIdx: str, precision: int = 0):
         super().__init__(recordIdx)
-        self.precision = 0
+        self.precision = precision
 
     def validate(self, value: str):
         # TODO: accept actual numeric values
-        if not value.isnumeric():
-            raise ValidationError(f'Value is not numeric: {value}')
+        try:
+            int(value)
+            return
+        except ValueError:
+            pass
+        try:
+            float(value)
+        except ValueError:
+            raise ValidationError(f'Value is not valid numeric: {value}')
 
     def postProcess(self, value):
-        if self.precision == 0:
-            return int(value)
-        else:
-            #TODO implement precision
-            raise TransformationError("non-zero precision not yet supported")
-
+        processed = f'{float(value):.{self.precision}f}'
+        return int(processed) if self.precision == 0 else float(processed)
 
 class Contract():
     """WIP: Generic mapping/validation approach for translating raw data to ORM"""

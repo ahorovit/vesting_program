@@ -1,6 +1,5 @@
 
 import unittest
-from .context import vesting_program
 from vesting_program.write.contract import Contract, DateField, EnumField, TextField, NumericField, ValidationError
 
 class TestDateField(unittest.TestCase):
@@ -34,6 +33,21 @@ class TestNumericField(unittest.TestCase):
     def test_invalid_numeric(self):
         with self.assertRaises(ValidationError):
             self.field.getValue({self.IDX: 'baz'})
+
+    def test_precision(self):
+        cases = [
+            [0, '1.02345', 1],
+            [1, '1.02345', 1.0],
+            [4, '1.02345', 1.0234],
+            [2, '1', 1.0]
+        ]
+
+        for case in cases:
+            with self.subTest(case=case):
+                precision, input, expected = case
+                field = NumericField(self.IDX, precision)
+                actual = field.getValue({self.IDX: input})
+                self.assertEqual(actual, expected)
 
 
 class TestEnumField(unittest.TestCase):
