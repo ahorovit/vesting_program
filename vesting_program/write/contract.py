@@ -36,10 +36,15 @@ class TextField(Field):
 
 
 class EnumField(TextField):
-    """TODO: Field for processing Enum data values"""
+    """Field for processing Enum data values"""
+
+    def __init__(self, recordIdx: str, validValues: list[str]):
+        super().__init__(recordIdx)
+        self.validValues = validValues
 
     def validate(self, value):
-        pass
+        if value not in self.validValues:
+            raise ValidationError(f'Invalid input: {value}. Expecting {self.validValues}')
 
 
 class DateField(Field):
@@ -74,9 +79,6 @@ class NumericField(Field):
         else:
             #TODO implement precision
             raise TransformationError("non-zero precision not yet supported")
-
-    
-
 
 
 class Contract():

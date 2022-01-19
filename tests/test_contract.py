@@ -1,7 +1,7 @@
 
 import unittest
 from .context import vesting_program
-from vesting_program.write.contract import Contract, DateField, TextField, NumericField, ValidationError
+from vesting_program.write.contract import Contract, DateField, EnumField, TextField, NumericField, ValidationError
 
 class TestDateField(unittest.TestCase):
     IDX = 'dateIdx'
@@ -34,6 +34,17 @@ class TestNumericField(unittest.TestCase):
     def test_invalid_numeric(self):
         with self.assertRaises(ValidationError):
             self.field.getValue({self.IDX: 'baz'})
+
+
+class TestEnumField(unittest.TestCase):
+    IDX = 'enumIdx'
+
+    def setUp(self):
+        self.field = EnumField(self.IDX, ['foo', 'bar'])
+
+    def test_invalid_enum(self):
+        with self.assertRaises(ValidationError):
+            self.field.getValue({self.IDX:'baz'})
 
 
 class TestContract(unittest.TestCase):

@@ -1,7 +1,7 @@
 import unittest
 from .context import vesting_program
 from vesting_program.write.write import VestingAggregator
-from vesting_program.write.contract import TextField, DateField, NumericField, Contract
+from vesting_program.write.contract import TextField, DateField, NumericField, Contract, ValidationError
 
  
 class TestAggregator(unittest.TestCase):
@@ -10,7 +10,7 @@ class TestAggregator(unittest.TestCase):
     FILTER_DATE = '2021-01-01'
 
     RECORD_1 = {
-        'VEST':'VEST',
+        VestingAggregator.EVENT_KEY:VestingAggregator.VEST_VALUE,
         VestingAggregator.EMPLOYEE_ID_KEY:'E001',
         VestingAggregator.EMPLOYEE_NAME_KEY:'Alice Smith',
         VestingAggregator.AWARD_ID_KEY:'ISO-001',
@@ -18,7 +18,7 @@ class TestAggregator(unittest.TestCase):
         VestingAggregator.QUANTITY_KEY:'1000'
     }
     RECORD_2 = {
-        'VEST':'VEST',
+        VestingAggregator.EVENT_KEY:VestingAggregator.VEST_VALUE,
         VestingAggregator.EMPLOYEE_ID_KEY:'E002',
         VestingAggregator.EMPLOYEE_NAME_KEY:'Bobby Jones',
         VestingAggregator.AWARD_ID_KEY:'NSO-001',
@@ -26,7 +26,7 @@ class TestAggregator(unittest.TestCase):
         VestingAggregator.QUANTITY_KEY:'100'
     }
     RECORD_3 = {
-        'VEST':'VEST',
+        VestingAggregator.EVENT_KEY:VestingAggregator.VEST_VALUE,
         VestingAggregator.EMPLOYEE_ID_KEY:'E001',
         VestingAggregator.EMPLOYEE_NAME_KEY:'Alice Smith',
         VestingAggregator.AWARD_ID_KEY:'ISO-001',
@@ -34,7 +34,7 @@ class TestAggregator(unittest.TestCase):
         VestingAggregator.QUANTITY_KEY:'200'
     }
     RECORD_4 = {
-        'VEST':'VEST',
+        VestingAggregator.EVENT_KEY:VestingAggregator.VEST_VALUE,
         VestingAggregator.EMPLOYEE_ID_KEY:'E001',
         VestingAggregator.EMPLOYEE_NAME_KEY:'Alice Smith',
         VestingAggregator.AWARD_ID_KEY:'ISO-001',
@@ -42,7 +42,7 @@ class TestAggregator(unittest.TestCase):
         VestingAggregator.QUANTITY_KEY:'500'
     }
     RECORD_5 = {
-        'VEST':'VEST',
+        VestingAggregator.EVENT_KEY:VestingAggregator.VEST_VALUE,
         VestingAggregator.EMPLOYEE_ID_KEY:'E000',
         VestingAggregator.EMPLOYEE_NAME_KEY:'Baz FooBar',
         VestingAggregator.AWARD_ID_KEY:'ISO-001',
@@ -50,27 +50,28 @@ class TestAggregator(unittest.TestCase):
         VestingAggregator.QUANTITY_KEY:'1000000'
     }
     RECORD_6 = {
-        'VEST':'VEST',
+        VestingAggregator.EVENT_KEY:VestingAggregator.VEST_VALUE,
         VestingAggregator.EMPLOYEE_ID_KEY:'E001',
         VestingAggregator.EMPLOYEE_NAME_KEY:'Alice Smith',
         VestingAggregator.AWARD_ID_KEY:'ISO-002',       # new award for Alizce
         VestingAggregator.DATE_KEY:'2020-12-15',
         VestingAggregator.QUANTITY_KEY:'600'
     }
-
-    # CONTRACT_FIELDS = {
-    #     VestingAggregator.EMPLOYEE_ID_KEY:TextField(VestingAggregator.EMPLOYEE_ID_KEY).setUnique(), 
-    #     VestingAggregator.AWARD_ID_KEY:TextField(VestingAggregator.AWARD_ID_KEY).setUnique(), 
-    #     VestingAggregator.EMPLOYEE_NAME_KEY:TextField(VestingAggregator.EMPLOYEE_NAME_KEY),
-    #     VestingAggregator.DATE_KEY:DateField(VestingAggregator.DATE_KEY),
-    #     VestingAggregator.QUANTITY_KEY:NumericField(VestingAggregator.QUANTITY_KEY)
-    # }
+    RECORD_7 = {
+        VestingAggregator.EVENT_KEY:VestingAggregator.CANCEL_VALUE, # subtract some award
+        VestingAggregator.EMPLOYEE_ID_KEY:'E001',
+        VestingAggregator.EMPLOYEE_NAME_KEY:'Alice Smith',
+        VestingAggregator.AWARD_ID_KEY:'ISO-002',       
+        VestingAggregator.DATE_KEY:'2020-12-15',
+        VestingAggregator.QUANTITY_KEY:'200'
+    }
 
     def setUp(self):
-        # self.contract = Contract(self.CONTRACT_FIELDS)
         self.aggregator = VestingAggregator.factory(self.FILTER_DATE)
 
     def test_aggregator_push(self):
+        """Test aggregator functionality over the course of expected input records"""
+
         expected = []
 
         # push first record
@@ -101,6 +102,17 @@ class TestAggregator(unittest.TestCase):
         self.aggregator.push(self.RECORD_6)
         expected.insert(2, 'E001,Alice Smith,ISO-002,600')
         self.assertEqual(expected, self.aggregator.getVestedTotals())
+
+        # Alice loses some of the second award -- reduce total
+        self.aggregator.push(self.RECORD_7)
+        expected[2] = 'E001,Alice Smith,ISO-002,400'
+        self.assertEqual(expected, self.aggregator.getVestedTotals())
+
+    def test_vested_total_is_positive(self):
+        """CANCEL event should not push total below 0"""
+        with self.assertRaises(ValidationError):
+            self.aggregator.push(self.RECORD_7)
+
 
 if __name__ == '__main__':
     unittest.main()
