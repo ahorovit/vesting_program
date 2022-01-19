@@ -12,23 +12,13 @@ class Writer(ABC):
     def pushRecord(self, record: dict):
         pass
 
-class TempWriter(Writer):
+
+class VestingAggregator(Writer):
     """Non-persistent implementation of Writer
-
-    Validates/filters/Aggregates input values based on a Contract. Does not
-    persist results to DB, but rather to an Aggregator object
-    """
-
-    def __init__(self):
-        pass
-
-    def pushRecord(self, record: dict):
-        pass
-
-
-class VestingAggregator():
-    """In lieu of DB layer, aggregates vesting events from input file
-    TODO: implement interface
+    
+    In lieu of DB layer, aggregates vesting events from input file in a dict
+    and generates output based on filterDate, precision and other assumptions
+    about the input data
     """
 
     VEST_VALUE = 'VEST'
@@ -43,6 +33,8 @@ class VestingAggregator():
 
     @classmethod # TODO: Use staticmethod?
     def factory(cls, filterDate: str, precision: int = 0):
+        """Builds instance with specific Contract for this vesting_program"""
+
         contract_ = Contract({
             cls.EVENT_KEY:EnumField(cls.EVENT_KEY, (cls.VEST_VALUE,cls.CANCEL_VALUE)),
             cls.EMPLOYEE_ID_KEY:TextField(cls.EMPLOYEE_ID_KEY).setUnique(), 
@@ -57,10 +49,11 @@ class VestingAggregator():
     def __init__(self, contract: Contract, filterDate: str, precision: int):
         self.result = {}
         self.contract = contract
+        #TODO: validate params
         self.filterDate = filterDate
         self.precision = precision
 
-    def push(self, record: dict):
+    def pushRecord(self, record: dict):
         key = self.contract.getUniqueKey(record)
 
         if key not in self.result:

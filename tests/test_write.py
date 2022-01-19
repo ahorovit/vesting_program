@@ -74,43 +74,43 @@ class TestAggregator(unittest.TestCase):
         expected = []
 
         # push first record
-        self.aggregator.push(self.RECORD_1)
+        self.aggregator.pushRecord(self.RECORD_1)
         expected.append('E001,Alice Smith,ISO-001,1000')
         self.assertEqual(expected, self.aggregator.getVestedTotals())
 
         # push second record -- distinct from first
-        self.aggregator.push(self.RECORD_2)
+        self.aggregator.pushRecord(self.RECORD_2)
         expected.append('E002,Bobby Jones,NSO-001,100')
         self.assertEqual(expected, self.aggregator.getVestedTotals())
 
         # push third record -- First row is updated
-        self.aggregator.push(self.RECORD_3)
+        self.aggregator.pushRecord(self.RECORD_3)
         expected[0] = 'E001,Alice Smith,ISO-001,1200' #increased by 200
         self.assertEqual(expected, self.aggregator.getVestedTotals())
 
         # fourth record is after filter date -- should not update result
-        self.aggregator.push(self.RECORD_4)
+        self.aggregator.pushRecord(self.RECORD_4)
         self.assertEqual(expected, self.aggregator.getVestedTotals())
 
         # fifth record introduces new employee, but is after filter date
-        self.aggregator.push(self.RECORD_5)
+        self.aggregator.pushRecord(self.RECORD_5)
         expected.insert(0, 'E000,Baz FooBar,ISO-001,0')
         self.assertEqual(expected, self.aggregator.getVestedTotals())
 
         # Alice gets second award -- new row
-        self.aggregator.push(self.RECORD_6)
+        self.aggregator.pushRecord(self.RECORD_6)
         expected.insert(2, 'E001,Alice Smith,ISO-002,600')
         self.assertEqual(expected, self.aggregator.getVestedTotals())
 
         # Alice loses some of the second award -- reduce total
-        self.aggregator.push(self.RECORD_7)
+        self.aggregator.pushRecord(self.RECORD_7)
         expected[2] = 'E001,Alice Smith,ISO-002,400'
         self.assertEqual(expected, self.aggregator.getVestedTotals())
 
     def test_vested_total_never_negative(self):
         """CANCEL event should not push total below 0"""
         with self.assertRaises(ValidationError):
-            self.aggregator.push(self.RECORD_7)
+            self.aggregator.pushRecord(self.RECORD_7)
 
     def test_precision(self):
         """VestedAggregator must truncate/fill to precision"""
@@ -126,7 +126,7 @@ class TestAggregator(unittest.TestCase):
                 inputRecord = self.RECORD_1.copy()
                 inputRecord[VestingAggregator.QUANTITY_KEY] = quantity
                 aggregator = VestingAggregator.factory(self.FILTER_DATE, precision)
-                aggregator.push(inputRecord)
+                aggregator.pushRecord(inputRecord)
                 actual = aggregator.getVestedTotals()[0].split(',')[-1]
                 self.assertEqual(actual, expected)
 
@@ -138,8 +138,8 @@ class TestAggregator(unittest.TestCase):
         record2[VestingAggregator.EVENT_KEY] = VestingAggregator.CANCEL_VALUE
         aggregator = VestingAggregator.factory(self.FILTER_DATE, 1)
 
-        aggregator.push(record1)
-        aggregator.push(record2)
+        aggregator.pushRecord(record1)
+        aggregator.pushRecord(record2)
         actual = aggregator.getVestedTotals()[0].split(',')[-1]
         self.assertEqual(actual, '299.8')       # 700.75 Must be truncated down before subtracting
 

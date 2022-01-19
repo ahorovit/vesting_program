@@ -19,7 +19,7 @@ def main():
     aggregator = VestingAggregator.factory(filterDate, precision)
 
     for record in reader.getNextRecord():
-        aggregator.push(record)
+        aggregator.pushRecord(record)
 
     for outputRow in aggregator.getVestedTotals():
         print(outputRow)
