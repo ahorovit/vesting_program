@@ -113,6 +113,7 @@ class TestAggregator(unittest.TestCase):
             self.aggregator.push(self.RECORD_7)
 
     def test_precision(self):
+        """VestedAggregator must truncate/fill to precision"""
         cases = [
             [0, '1.02345', '1'],
             [1, '1.02345', '1.0'],
@@ -122,12 +123,25 @@ class TestAggregator(unittest.TestCase):
         for case in cases:
             with self.subTest(case=case):
                 precision, quantity, expected = case
-                inputRecord = self.RECORD_1
+                inputRecord = self.RECORD_1.copy()
                 inputRecord[VestingAggregator.QUANTITY_KEY] = quantity
                 aggregator = VestingAggregator.factory(self.FILTER_DATE, precision)
                 aggregator.push(inputRecord)
                 actual = aggregator.getVestedTotals()[0].split(',')[-1]
                 self.assertEqual(actual, expected)
+
+    def test_rounding_correct(self):
+        record1 = self.RECORD_1.copy()
+        record1[VestingAggregator.QUANTITY_KEY] = '1000.5'
+        record2 = self.RECORD_1.copy()
+        record2[VestingAggregator.QUANTITY_KEY] = '700.75' 
+        record2[VestingAggregator.EVENT_KEY] = VestingAggregator.CANCEL_VALUE
+        aggregator = VestingAggregator.factory(self.FILTER_DATE, 1)
+
+        aggregator.push(record1)
+        aggregator.push(record2)
+        actual = aggregator.getVestedTotals()[0].split(',')[-1]
+        self.assertEqual(actual, '299.8')       # 700.75 Must be truncated down before subtracting
 
 
 if __name__ == '__main__':

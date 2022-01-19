@@ -4,7 +4,7 @@ from write.write import VestingAggregator
 from write.contract import Contract
 
 def main():
-    inputFile, filterDate = parseArgs()
+    inputFile, filterDate, precision = parseArgs()
 
     headers = [
         VestingAggregator.EVENT_KEY,
@@ -16,7 +16,7 @@ def main():
     ]
 
     reader = CsvReader(inputFile, headers)
-    aggregator = VestingAggregator.factory(filterDate)
+    aggregator = VestingAggregator.factory(filterDate, precision)
 
     for record in reader.getNextRecord():
         aggregator.push(record)
@@ -24,17 +24,20 @@ def main():
     for outputRow in aggregator.getVestedTotals():
         print(outputRow)
 
-
 def parseArgs():
     # return "data/example1.csv", "2020-04-01" #TODO: Remove 
 
-    # Extract filepath, precision args
-    if len(sys.argv) < 3:
-        raise InputError('Expecting inputFile and filterDate parameters')
+    numArgs = len(sys.argv)
+    if numArgs == 3:
+        _, inputFile, filterDate = sys.argv
+        precision = 0
+    elif numArgs == 4:
+        _, inputFile, filterDate, precision = sys.argv
+    else:
+        raise InputError('Expecting inputFile, filterDate and optional precision parameters')
 
     # TODO: Validate args
-    _, inputFile, filterDate = sys.argv 
-    return (inputFile, filterDate)
+    return inputFile, filterDate, int(precision)
 
 class InputError(Exception):
     pass

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import datetime
+import math
 
 class Field(ABC):
     """Contract Element for validating and transforming input value"""
@@ -81,8 +82,9 @@ class NumericField(Field):
             raise ValidationError(f'Value is not numeric: {value}')
 
     def postProcess(self, value):
-        processed = f'{float(value):.{self.precision}f}'
-        return int(processed) if self.precision == 0 else float(processed)
+        """Truncates, does not round, to given precision"""
+        processed = math.floor(float(value) * 10 ** self.precision) / 10 ** self.precision
+        return int(processed) if self.precision == 0 else processed
 
 class Contract():
     """WIP: Generic mapping/validation approach for translating raw data to ORM"""
