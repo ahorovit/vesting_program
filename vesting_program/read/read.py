@@ -26,5 +26,10 @@ class CsvReader(Reader):
         with open(self.csvPath, "r") as handle:
             csvReader = csv.reader(handle)
             for csvRow in csvReader:
+                if len(csvRow) != len(self.header):
+                    raise HeaderMismatchError('csv row length does not match header')
                 yield {key:csvRow[idx] for idx, key in enumerate(self.header)}
 
+
+class HeaderMismatchError(Exception):
+    pass

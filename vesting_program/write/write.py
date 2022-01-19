@@ -91,6 +91,7 @@ class VestingAggregator():
         if sign < 0 and self.result[key][self.QUANTITY_KEY] < magnitude:
             raise ValidationError('CANCEL events cannot exceed VEST events to date')
 
+        # TODO: clarify rounding here?
         self.result[key][self.QUANTITY_KEY] += sign*magnitude
 
     def getVestedTotals(self) -> list[str]:

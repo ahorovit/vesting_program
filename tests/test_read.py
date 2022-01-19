@@ -1,6 +1,6 @@
 import unittest
 import os
-from vesting_program.read.read import CsvReader
+from vesting_program.read.read import CsvReader, HeaderMismatchError
 
 class TestCsvReader(unittest.TestCase):
     def setUp(self):
@@ -17,6 +17,14 @@ class TestCsvReader(unittest.TestCase):
             expectedRow = {'event':'VEST', 'id':'E001', 'name':'Alice'}
             self.assertEqual(csvRow, expectedRow, 'csvRow does not match')
         self.assertEqual(rowCount, 2, 'expected 2 rows')
+
+    def test_column_count_check(self):
+        """Tests CsvReader's enforcement of header count matching row length"""
+        self.reader.header.append('foo')
+
+        with self.assertRaises(HeaderMismatchError):
+            for csvRow in self.reader.getNextRecord():
+                pass
 
 
 if __name__ == '__main__':
